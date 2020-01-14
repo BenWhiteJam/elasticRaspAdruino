@@ -1,6 +1,7 @@
 elasticsearch:
   image: ind3x/rpi-elasticsearch:latest
   command: elasticsearch -Des.network.host=0.0.0.0
+  restart: always
   ports:
     - "9200:9200"
     - "9300:9300"
@@ -8,6 +9,7 @@ elasticsearch:
 logstash:
   build: logstash/
   command: logstash -f /etc/logstash/conf.d/logstash.conf
+  restart: always
   volumes:
     - ./logstash/config:/etc/logstash/conf.d
   ports:
@@ -17,6 +19,7 @@ logstash:
 
 kibana:
   build: kibana/
+  restart: always
   volumes:
     - ./kibana/config/:/opt/kibana/config/
   ports:
