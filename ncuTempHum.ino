@@ -13,8 +13,8 @@ const int timeZone = 0;  // UTC
 //#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
 
 /*Put your SSID & Password*/
-const char* ssid = "WLAN-UPTAXE";  // Enter SSID here
-const char* password = "0908907934842863";  //Enter Password here
+const char* ssid = "ssid";  // Enter SSID here
+const char* password = "pwd";  //Enter Password here
 // Variables needed for NTP
 // Elasticsearch needs us to generate timestamps for the data in order to make date histograms in Kibana.
 WiFiUDP Udp;
