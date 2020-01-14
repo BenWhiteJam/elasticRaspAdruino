@@ -1,4 +1,17 @@
-# Docker ELK stack
+# Freshly
+The project aims to setup a scalable way to messure and analyze smart home gowing plant-packages.
+- Raspberry PI 3
+    - ELK Stack
+- Ncu
+    - connect to wifi
+    - get timestamp from global time provider
+    - start web server
+    - get DHT11 temperature and humidity
+    - create payload and send through http to elasticsearch
+    - fetch temperature and humidity on_connect to webserver
+
+
+## Docker ELK stack
 
 Run the latest version of the ELK (Elasticseach, Logstash, Kibana) stack with Docker and Docker-compose.
 
@@ -10,9 +23,9 @@ Uses Docker images which support Raspberry Pi based on the official images:
 * [rpi-logstash](https://hub.docker.com/r/ind3x/rpi-logstash/)
 * [rpi-kibana](https://hub.docker.com/r/ind3x/rpi-kibana/)
 
-# Requirements
+## Requirements
 
-## Setup
+### Setup
 
 1. Install [Docker](http://docker.io) on Raspberry Pi.
 2. Install [Docker-compose](http://docs.docker.com/compose/install/) on Raspberry Pi.
@@ -21,7 +34,7 @@ Uses Docker images which support Raspberry Pi based on the official images:
 *NOTE*: Give a try to [HypriotOS](http://blog.hypriot.com/) if you want to easily install Docker on your Raspberry Pi.
 
 
-# Usage
+## Usage
 
 Start the ELK stack using *docker-compose* in your Raspberry Pi:
 
@@ -57,10 +70,16 @@ By default, the stack exposes the following ports:
 * 9300: Elasticsearch TCP transport
 * 5601: Kibana
 
-# Configuration
+## Configuration
 
 You can get more information about how to configure ELK stack in the original [Docker ELK stack repository](https://github.com/deviantony/docker-elk).
 
 *NOTE*: Configuration is not dynamically reloaded, you will need to restart the stack after any change in the configuration of a component.
 
-**Tested on Raspberry Pi 2**
+**Tested on Raspberry Pi 3**
+
+### TODO:
+1. configuration for auto-restart for both ncu & rasp
+2. auto-discovery of available Ncu sensors
+3. dynamically configure the payload for eleasticsearch based on the available sensor data
+4. netscan to fetch the elasticsearch host ip dynamically
