@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <WiFiManager.h>   
 #include "DHT.h"
 #include <TimeLib.h>
 #include <WiFiUdp.h>
@@ -41,22 +42,27 @@ float Humidity;
 uint32_t t_ms;
 uint32_t start_mills;
 String run_mills;
+byte mac[6];
+String mac_string;
 int milis_chars;
 
 void setup() {
   Serial.begin(74880);
+  WiFiManager wifiManager;
+  Serial.println("Waiting for WiFi credentials...");
+  wifiManager.autoConnect("Freshly");
   delay(100);
 
   pinMode(DHTPin, INPUT);
 
   dht.begin();
 
-  Serial.println("Connecting to ");
-  Serial.println(ssid);
+  //Serial.println("Connecting to ");
+  //Serial.println(ssid);
 
-  WiFi.config()
+  //WiFi.config()
   //connect to your local wi-fi network
-  WiFi.begin(ssid, password);
+  //WiFi.begin(ssid, password);
 
   //check wi-fi is connected to wi-fi network
   while (WiFi.status() != WL_CONNECTED) {
@@ -65,8 +71,10 @@ void setup() {
   }
   Serial.println("");
   Serial.println("WiFi connected..!");
-  Serial.print("Got IP: ");  Serial.println(WiFi.localIP());
-
+  Serial.print("Got IP: ");
+  Serial.println(WiFi.localIP());
+  WiFi.macAddress(mac);
+  mac_string = String(mac[0], HEX) + String(mac[1], HEX) + String(mac[2], HEX) + String(mac[3], HEX) + String(mac[4], HEX) + String(mac[5], HEX);
 
   Serial.println("Setting up NTP");
   Udp.begin(localPort);
@@ -124,18 +132,18 @@ void loop() {
 void handle_OnConnect() {
   Temperature = dht.readTemperature(); // Gets the values of the temperature
   Humidity = dht.readHumidity(); // Gets the values of the humidity
-  server.send(200, "text/html", SendHTML(Temperature, Humidity, sensID));
+  server.send(200, "text/html", SendHTML(Temperature, Humidity, sensID, mac_string));
 }
 
 void handle_NotFound() {
   server.send(404, "text/plain", "Not found");
 }
-String SendHTML(float Temperaturestat, float Humiditystat, int sensID) {
+String SendHTML(float Temperaturestat, float Humiditystat, int sensID, String mac_string) {
   String ptr = "<!DOCTYPE html> <html>\n";
   ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
   ptr += "<link href=\"https://fonts.googleapis.com/css?family=Open+Sans:300,400,600\" rel=\"stylesheet\">\n";
   ptr += "<title>";
-  ptr += (int)sensID;
+  ptr += (int)sensID + " MAC: " + mac_string;
   ptr += " Status Report</title>\n";
   ptr += "<style>html { font-family: 'Open Sans', sans-serif; display: block; margin: 0px auto; text-align: center;color: #333333;}\n";
   ptr += "body{margin-top: 50px;}\n";
